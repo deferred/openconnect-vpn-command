@@ -3,12 +3,7 @@
 PID_FILE_PATH='/var/run/vpn.pid'
 LOG_PATH='/tmp/vpn_status.txt'
 
-# format: 'host username password authgroup'
-CREDENTIALS=(
-    'host1 username1 password1 authgroup'
-    'host2 username2 password2'
-    'host3 username3 password3 authgroup'
-)
+set -o allexport; source "${HOME}/.openconnect/connection-info.env"; set +o allexport
 
 function start() {
 
@@ -22,29 +17,15 @@ function start() {
     exit 1
   fi
 
-  for item in "${CREDENTIALS[@]}"; do
+  echo "Connecting to ${HOST}"
+  echo "${PASSWORD}" | openconnect "${HOST}" --user="${USERNAME}" --authgroup "${AUTHGROUP}" --background --passwd-on-stdin --pid-file $PID_FILE_PATH >$LOG_PATH 2>&1
 
-    read -ra credentials <<<"$item"
-    local host=${credentials[0]}
-    local username=${credentials[1]}
-    local password=${credentials[2]}
-    local authgroup=${credentials[3]}
-
-    connect "$host" "$username" "$password" "$authgroup"
-
-    if is_vpn_running; then
-      printf "VPN is connected \n"
-      print_current_ip_address
-      break
-    else
-      printf "VPN failed to connect! \n"
-    fi
-  done
-}
-
-function connect() {
-  echo "Connecting to $host"
-  echo "$3" | openconnect "$1" --user="$2" --authgroup "$4" --background --passwd-on-stdin --pid-file $PID_FILE_PATH >$LOG_PATH 2>&1
+  if is_vpn_running; then
+    printf "VPN is connected \n"
+    print_current_ip_address
+  else
+    printf "VPN failed to connect! \n"
+  fi
 }
 
 function status() {
@@ -112,4 +93,3 @@ restart)
   exit 0
   ;;
 esac
-
