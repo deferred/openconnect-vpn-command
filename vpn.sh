@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PID_FILE_PATH='/var/run/vpn.pid'
-LOG_PATH='/tmp/vpn_status.txt'
+LOG_PATH='/tmp/openconnect.log'
 
 set -o allexport; source "${HOME}/.openconnect/connection-info.env"; set +o allexport
 
