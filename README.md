@@ -1,14 +1,14 @@
 # vpn.sh
 
-vpn.sh is a shell script to simplify openconnect experience.
+vpn.sh is a shell script to simplify OpenConnect VPN client experience.
 
 ## Installation
 
-1. Install openconnect using your preferred package manager `brew install openconnect`
+1. Install OpenConnect using your preferred package manager `brew install openconnect`
 2. `mkdir -p ~/.openconnect`
-3. `cp connection-info.env ~/.openconnect/`
+3. `cp connection-info.env ~/.openconnect`
 4. Modify ` ~/.openconnect/connection-info.env` with your credentials
-5. Put `vpn` in your PATH `ln -s vpn.sh ~/.local/bin/vpn`
+5. `sudo cp vpn.sh /usr/local/bin/vpn`
 
 ## Usage
 
