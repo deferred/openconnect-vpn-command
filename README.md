@@ -28,3 +28,5 @@ sudo vpn status
 # restarts vpn
 sudo vpn restart
 ```
+
+Logs are available at `/tmp/openconnect.log`
