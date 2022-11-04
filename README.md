@@ -1,9 +1,30 @@
-# Install openconnect
-`sudo apt-get install openconnect lib32ncurses5 lib32tinfo5 lib32z1 libc6-i386 libpkcs11-helper1 openvpn vpnc-scripts`
+# vpn.sh
 
-# Usage
+vpn.sh is a shell script to simplify openconnect experience.
 
-* Clone this repo
-* Modify `vpn.sh` with your credentials
-* `$ ln -s vpn.sh /usr/bin/vpn`
-* Use it with `sudo vpn start|stop|restart|status` command patterns.
+## Installation
+
+1. Install openconnect using your preferred package manager `brew install openconnect`
+2. `mkdir -p ~/.openconnect`
+3. `cp connection-info.env ~/.openconnect/`
+4. Modify ` ~/.openconnect/connection-info.env` with your credentials
+5. Put `vpn` in your PATH `ln -s vpn.sh ~/.local/bin/vpn`
+
+## Usage
+
+```bash
+# shows available commands
+vpn
+
+# starts vpn
+sudo vpn start
+
+# stops vpn
+sudo vpn stop
+
+# shows vpn status
+sudo vpn status
+
+# restarts vpn
+sudo vpn restart
+```
