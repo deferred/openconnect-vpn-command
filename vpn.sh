@@ -18,7 +18,7 @@ function start() {
   fi
 
   echo "Connecting to ${HOST}"
-  echo "${PASSWORD}" | openconnect "${HOST}" --user="${USERNAME}" --authgroup "${AUTHGROUP}" --background --passwd-on-stdin --pid-file $PID_FILE_PATH >$LOG_PATH 2>&1
+  echo "${PASSWORD}" | openconnect "${HOST}" --user="${USERNAME}" --authgroup "${AUTHGROUP}" --background --script "vpn-slice --no-ns-hosts --no-host-names --verbose $HOSTS_TO_ROUTE" --passwd-on-stdin --pid-file $PID_FILE_PATH > $LOG_PATH 2>&1
 
   if is_vpn_running; then
     printf "VPN is connected \n"
