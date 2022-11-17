@@ -36,7 +36,7 @@ function stop() {
 
   if is_vpn_running; then
     rm -f $PID_FILE_PATH >/dev/null 2>&1
-    kill -9 "$(pgrep openconnect)" >/dev/null 2>&1
+    kill -9 "$(pgrep openconnect)" >> $LOG_PATH 2>&1
   fi
 
   printf "VPN is disconnected \n"
