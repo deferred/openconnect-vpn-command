@@ -8,7 +8,7 @@ vpn.sh is a shell script to simplify OpenConnect VPN client experience.
 2. `mkdir -p ~/.openconnect`
 3. `cp connection-info.env ~/.openconnect`
 4. Modify ` ~/.openconnect/connection-info.env`
-5. `sudo cp ${PWD}/vpn.sh /usr/local/bin/vpn`
+5. `sudo cp vpn.sh /usr/local/bin/vpn`
 
 ## Usage
 
