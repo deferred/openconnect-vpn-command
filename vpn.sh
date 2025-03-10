@@ -6,9 +6,34 @@ IFS=$'\n\t'
 PID_FILE_PATH='/var/run/vpn.pid'
 LOG_PATH='/tmp/openconnect.log'
 
+if [[ ! -f "${HOME}/.openconnect/connection-info.env" ]]; then
+    echo "Error: Configuration file not found at ${HOME}/.openconnect/connection-info.env"
+    exit 1
+fi
+
 set -o allexport; source "${HOME}/.openconnect/connection-info.env"; set +o allexport
 
+check_dependencies() {
+  for cmd in openconnect dig ping; do
+    command -v "$cmd" >/dev/null 2>&1 || { echo "Error: $cmd is required but not installed"; exit 1; }
+  done
+}
+
+validate_environment() {
+  local required_vars=("HOST" "USERNAME" "PASSWORD" "AUTHGROUP" "HOSTS_TO_ROUTE")
+
+  for var in "${required_vars[@]}"; do
+    if [[ -z "${!var:-}" ]]; then
+      echo "Error: $var is not set in environment file"
+      exit 1
+    fi
+  done
+}
+
 start() {
+  check_dependencies
+  validate_environment
+
   if ! is_network_available; then
     echo "Network is not available. Check your internet connection"
     exit 1
@@ -40,13 +65,13 @@ stop() {
   print_current_ip_address
 }
 
-status() {
-  is_vpn_running && echo "VPN is running" || echo "VPN is stopped"
-}
-
-restart () {
+restart() {
   stop
   start
+}
+
+status() {
+  is_vpn_running && echo "VPN is running" || echo "VPN is stopped"
 }
 
 print_info() {
