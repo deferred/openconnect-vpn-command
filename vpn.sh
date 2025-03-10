@@ -103,20 +103,9 @@ print_current_ip_address() {
 }
 
 case "$1" in
-start)
-  start
-  ;;
-stop)
-  stop
-  ;;
-status)
-  status
-  ;;
-restart)
-  restart
-  ;;
-*)
-  print_info
-  exit 0
-  ;;
+  start) start ;;
+  stop) stop ;;
+  status) status ;;
+  restart) restart ;;
+  *) print_info; exit 0 ;;
 esac
