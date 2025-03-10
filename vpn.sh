@@ -3,6 +3,11 @@
 set -euo pipefail
 IFS=$'\n\t'
 
+if [[ $EUID -ne 0 ]]; then
+   echo "Please run as root"
+   exit 1
+fi
+
 PID_FILE_PATH='/var/run/vpn.pid'
 LOG_PATH='/tmp/openconnect.log'
 
