@@ -45,7 +45,7 @@ start() {
   fi
 
   echo "Connecting to ${HOST}"
-  echo "${PASSWORD}" | openconnect "${HOST}" --user="${USERNAME}" --authgroup "${AUTHGROUP}" --background --script "vpn-slice --no-ns-hosts --no-host-names --verbose $HOSTS_TO_ROUTE" --passwd-on-stdin --pid-file "$PID_FILE_PATH" > "$LOG_PATH" 2>&1
+  openconnect-sso --server "${HOST}" --user "${USERNAME}" --authgroup "${AUTHGROUP}" -- --script="vpn-slice --no-ns-hosts --no-host-names --verbose $HOSTS_TO_ROUTE" --pid-file="$PID_FILE_PATH" --background > "$LOG_PATH" 2>&1
 
   if is_vpn_running; then
     echo "VPN is connected"
@@ -57,8 +57,10 @@ start() {
 
 stop() {
   if is_vpn_running; then
+    local pid
+    pid=$(cat "$PID_FILE_PATH")
+    kill -9 "$pid" >> "$LOG_PATH" 2>&1 || true
     rm -f "$PID_FILE_PATH" >/dev/null 2>&1
-    kill -9 "$(pgrep openconnect)" >> "$LOG_PATH" 2>&1 || true
   fi
 
   echo "VPN is disconnected"
