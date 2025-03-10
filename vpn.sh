@@ -10,12 +10,12 @@ set -o allexport; source "${HOME}/.openconnect/connection-info.env"; set +o alle
 
 start() {
   if ! is_network_available; then
-    printf "Network is not available. Check your internet connection \n"
+    echo "Network is not available. Check your internet connection"
     exit 1
   fi
 
   if is_vpn_running; then
-    printf "VPN is already running\n"
+    echo "VPN is already running"
     exit 1
   fi
 
@@ -23,15 +23,15 @@ start() {
   echo "${PASSWORD}" | openconnect "${HOST}" --user="${USERNAME}" --authgroup "${AUTHGROUP}" --background --script "vpn-slice --no-ns-hosts --no-host-names --verbose $HOSTS_TO_ROUTE" --passwd-on-stdin --pid-file "$PID_FILE_PATH" > "$LOG_PATH" 2>&1
 
   if is_vpn_running; then
-    printf "VPN is connected \n"
+    echo "VPN is connected"
     print_current_ip_address
   else
-    printf "VPN failed to connect! \n"
+    echo "VPN failed to connect!"
   fi
 }
 
 status() {
-  is_vpn_running && printf "VPN is running \n" || printf "VPN is stopped \n"
+  is_vpn_running && echo "VPN is running" || echo "VPN is stopped"
 }
 
 stop() {
@@ -40,7 +40,7 @@ stop() {
     kill -9 "$(pgrep openconnect)" >> "$LOG_PATH" 2>&1 || true
   fi
 
-  printf "VPN is disconnected \n"
+  echo "VPN is disconnected"
   print_current_ip_address
 }
 
@@ -62,7 +62,7 @@ is_vpn_running() {
 print_current_ip_address() {
   local ip
   ip=$(dig +short myip.opendns.com @resolver1.opendns.com)
-  printf "Your IP address is %s \n" "$ip"
+  echo "Your IP address is $ip"
 }
 
 case "$1" in
