@@ -1,12 +1,14 @@
 #!/bin/bash
 
+set -euo pipefail
+IFS=$'\n\t'
+
 PID_FILE_PATH='/var/run/vpn.pid'
 LOG_PATH='/tmp/openconnect.log'
 
 set -o allexport; source "${HOME}/.openconnect/connection-info.env"; set +o allexport
 
 function start() {
-
   if ! is_network_available; then
     printf "Network is not available. Check your internet connection \n"
     exit 1
@@ -18,7 +20,7 @@ function start() {
   fi
 
   echo "Connecting to ${HOST}"
-  echo "${PASSWORD}" | openconnect "${HOST}" --user="${USERNAME}" --authgroup "${AUTHGROUP}" --background --script "vpn-slice --no-ns-hosts --no-host-names --verbose $HOSTS_TO_ROUTE" --passwd-on-stdin --pid-file $PID_FILE_PATH > $LOG_PATH 2>&1
+  echo "${PASSWORD}" | openconnect "${HOST}" --user="${USERNAME}" --authgroup "${AUTHGROUP}" --background --script "vpn-slice --no-ns-hosts --no-host-names --verbose $HOSTS_TO_ROUTE" --passwd-on-stdin --pid-file "$PID_FILE_PATH" > "$LOG_PATH" 2>&1
 
   if is_vpn_running; then
     printf "VPN is connected \n"
@@ -33,10 +35,9 @@ function status() {
 }
 
 function stop() {
-
   if is_vpn_running; then
-    rm -f $PID_FILE_PATH >/dev/null 2>&1
-    kill -9 "$(pgrep openconnect)" >> $LOG_PATH 2>&1
+    rm -f "$PID_FILE_PATH" >/dev/null 2>&1
+    kill -9 "$(pgrep openconnect)" >> "$LOG_PATH" 2>&1 || true
   fi
 
   printf "VPN is disconnected \n"
@@ -52,9 +53,9 @@ function is_network_available() {
 }
 
 function is_vpn_running() {
-  test ! -f $PID_FILE_PATH && return 1
+  test ! -f "$PID_FILE_PATH" && return 1
   local pid
-  pid=$(cat $PID_FILE_PATH)
+  pid=$(cat "$PID_FILE_PATH")
   kill -0 "$pid" >/dev/null 2>&1
 }
 
@@ -65,30 +66,20 @@ function print_current_ip_address() {
 }
 
 case "$1" in
-
 start)
-
   start
   ;;
-
 stop)
-
   stop
   ;;
-
 status)
-
   status
   ;;
-
 restart)
-
-  $0 stop
-  $0 start
+  "$0" stop
+  "$0" start
   ;;
-
 *)
-
   print_info
   exit 0
   ;;
