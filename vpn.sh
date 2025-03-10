@@ -30,10 +30,6 @@ start() {
   fi
 }
 
-status() {
-  is_vpn_running && echo "VPN is running" || echo "VPN is stopped"
-}
-
 stop() {
   if is_vpn_running; then
     rm -f "$PID_FILE_PATH" >/dev/null 2>&1
@@ -44,8 +40,12 @@ stop() {
   print_current_ip_address
 }
 
+status() {
+  is_vpn_running && echo "VPN is running" || echo "VPN is stopped"
+}
+
 print_info() {
-  echo "Usage: $(basename "$0") (start|stop|status|restart)"
+  echo "Usage: $(basename "$0") (start|stop|restart|status)"
 }
 
 is_network_available() {
