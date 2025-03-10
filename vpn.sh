@@ -8,7 +8,7 @@ LOG_PATH='/tmp/openconnect.log'
 
 set -o allexport; source "${HOME}/.openconnect/connection-info.env"; set +o allexport
 
-function start() {
+start() {
   if ! is_network_available; then
     printf "Network is not available. Check your internet connection \n"
     exit 1
@@ -30,11 +30,11 @@ function start() {
   fi
 }
 
-function status() {
+status() {
   is_vpn_running && printf "VPN is running \n" || printf "VPN is stopped \n"
 }
 
-function stop() {
+stop() {
   if is_vpn_running; then
     rm -f "$PID_FILE_PATH" >/dev/null 2>&1
     kill -9 "$(pgrep openconnect)" >> "$LOG_PATH" 2>&1 || true
@@ -44,22 +44,22 @@ function stop() {
   print_current_ip_address
 }
 
-function print_info() {
+print_info() {
   echo "Usage: $(basename "$0") (start|stop|status|restart)"
 }
 
-function is_network_available() {
+is_network_available() {
   ping -q -c 1 -W 1 8.8.8.8 >/dev/null 2>&1
 }
 
-function is_vpn_running() {
+is_vpn_running() {
   test ! -f "$PID_FILE_PATH" && return 1
   local pid
   pid=$(cat "$PID_FILE_PATH")
   kill -0 "$pid" >/dev/null 2>&1
 }
 
-function print_current_ip_address() {
+print_current_ip_address() {
   local ip
   ip=$(dig +short myip.opendns.com @resolver1.opendns.com)
   printf "Your IP address is %s \n" "$ip"
