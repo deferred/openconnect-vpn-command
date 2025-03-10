@@ -44,6 +44,11 @@ status() {
   is_vpn_running && echo "VPN is running" || echo "VPN is stopped"
 }
 
+restart () {
+  stop
+  start
+}
+
 print_info() {
   echo "Usage: $(basename "$0") (start|stop|restart|status)"
 }
@@ -77,8 +82,7 @@ status)
   status
   ;;
 restart)
-  "$0" stop
-  "$0" start
+  restart
   ;;
 *)
   print_info
