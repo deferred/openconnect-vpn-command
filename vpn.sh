@@ -91,8 +91,7 @@ is_vpn_running() {
 
 print_current_ip_address() {
   local ip
-  ip=$(timeout 5 dig +short myip.opendns.com @resolver1.opendns.com)
-  [[ -z "$ip" ]] && ip="unknown"
+  ip=$(dig +short myip.opendns.com @resolver1.opendns.com)
   echo "Your IP address is $ip"
 }
 
